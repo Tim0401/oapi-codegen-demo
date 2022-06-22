@@ -21,6 +21,17 @@ type Item struct {
 	Price int `json:"price"`
 }
 
+// GetItemRes defines model for GetItemRes.
+type GetItemRes struct {
+	// アイテム
+	Item Item `json:"item"`
+}
+
+// GetItemsRes defines model for GetItemsRes.
+type GetItemsRes struct {
+	Items []Item `json:"items"`
+}
+
 // GetItemsParams defines parameters for GetItems.
 type GetItemsParams struct {
 	// 取得数

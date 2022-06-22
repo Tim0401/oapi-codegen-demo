@@ -10,19 +10,7 @@ paths:
         - items
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    description: アイテム一覧
-                    items:
-                      $ref: '#/components/schemas/item'
-                required:
-                  - items
+          $ref: '#/components/responses/GetItemsRes'
       operationId: get-items
       description: アイテム一覧を取得します
       parameters:
@@ -62,16 +50,7 @@ paths:
         - items
       responses:
         '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item:
-                    $ref: '#/components/schemas/item'
-                required:
-                  - item
+          $ref: '#/components/responses/GetItemRes'
         '404':
           description: Not Found
       operationId: get-item
@@ -132,3 +111,28 @@ components:
       name: Authorization-Admin
       type: apiKey
       in: header
+  responses:
+    GetItemRes:
+      description: GetItemRes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              item:
+                $ref: '#/components/schemas/item'
+            required:
+              - item
+    GetItemsRes:
+      description: GetItemsRes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/components/schemas/item'
+            required:
+              - items
