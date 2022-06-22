@@ -40,7 +40,7 @@ paths:
   '/items/{id}':
     parameters:
       - schema:
-          type: string
+          type: integer
         name: id
         in: path
         required: true

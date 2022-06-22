@@ -65,6 +65,15 @@ func main() {
 		return nil
 	}
 
+	// custom error message
+	validatorOpts.ErrorHandler = func(c echo.Context, err *echo.HTTPError) error {
+		if rerr, ok := err.Internal.(*openapi3filter.RequestError); ok {
+			fmt.Print(rerr.Parameter.Name)
+			err.Message = rerr.Parameter.Name + "が不正な値です。"
+		}
+		return err
+	}
+
 	// init echo
 	e := echo.New()
 	g := e.Group(apiPathPrefix)

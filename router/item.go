@@ -16,13 +16,13 @@ type ItemRouterInterface interface {
 	PostItems(ctx echo.Context) error
 
 	// (DELETE /items/{id})
-	DeleteItem(ctx echo.Context, id string) error
+	DeleteItem(ctx echo.Context, id int) error
 	// Your GET endpoint
 	// (GET /items/{id})
-	GetItem(ctx echo.Context, id string) error
+	GetItem(ctx echo.Context, id int) error
 
 	// (PUT /items/{id})
-	PutItem(ctx echo.Context, id string) error
+	PutItem(ctx echo.Context, id int) error
 }
 
 type ItemRouter struct{}
@@ -45,17 +45,17 @@ func (r *ItemRouter) PostItems(ctx echo.Context) error {
 	}
 	return ctx.NoContent(http.StatusCreated)
 }
-func (r *ItemRouter) DeleteItem(ctx echo.Context, id string) error {
+func (r *ItemRouter) DeleteItem(ctx echo.Context, id int) error {
 	fmt.Printf("%v", id)
 	return ctx.NoContent(http.StatusNoContent)
 }
-func (r *ItemRouter) GetItem(ctx echo.Context, id string) error {
+func (r *ItemRouter) GetItem(ctx echo.Context, id int) error {
 	fmt.Printf("%v", id)
 	return ctx.JSON(http.StatusOK, openapi.GetItemRes{
 		Item: openapi.Item{},
 	})
 }
-func (r *ItemRouter) PutItem(ctx echo.Context, id string) error {
+func (r *ItemRouter) PutItem(ctx echo.Context, id int) error {
 	fmt.Printf("%v", id)
 	body := openapi.PutItemJSONRequestBody{}
 	if err := ctx.Bind(&body); err != nil {

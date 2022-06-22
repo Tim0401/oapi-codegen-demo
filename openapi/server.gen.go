@@ -21,13 +21,13 @@ type ServerInterface interface {
 	PostItems(ctx echo.Context) error
 
 	// (DELETE /items/{id})
-	DeleteItem(ctx echo.Context, id string) error
+	DeleteItem(ctx echo.Context, id int) error
 	// Your GET endpoint
 	// (GET /items/{id})
-	GetItem(ctx echo.Context, id string) error
+	GetItem(ctx echo.Context, id int) error
 
 	// (PUT /items/{id})
-	PutItem(ctx echo.Context, id string) error
+	PutItem(ctx echo.Context, id int) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -68,7 +68,7 @@ func (w *ServerInterfaceWrapper) PostItems(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) DeleteItem(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id int
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
 	if err != nil {
@@ -86,7 +86,7 @@ func (w *ServerInterfaceWrapper) DeleteItem(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetItem(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id int
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
 	if err != nil {
@@ -102,7 +102,7 @@ func (w *ServerInterfaceWrapper) GetItem(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PutItem(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id int
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
 	if err != nil {
