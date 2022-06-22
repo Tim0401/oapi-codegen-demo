@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: openapi.yml
+  version: '1.0'
+paths:
+  /items:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    description: アイテム一覧
+                    items:
+                      $ref: '#/components/schemas/item'
+                required:
+                  - items
+      operationId: get-items
+      description: アイテム一覧を取得します
+    post:
+      summary: ''
+      operationId: post-items
+      tags:
+        - items
+      description: アイテムを一件登録します
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/item'
+      responses:
+        '201':
+          description: Created
+    parameters: []
+  '/items/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    $ref: '#/components/schemas/item'
+                required:
+                  - item
+        '404':
+          description: Not Found
+      operationId: get-item
+components:
+  schemas:
+    item:
+      title: item
+      x-stoplight:
+        id: ly7bu2x9amqta
+      type: object
+      description: アイテム
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          description: アイテム名
+        description:
+          type: string
+          description: アイテム説明
+        price:
+          type: integer
+          minimum: 0
+          description: 価格
+      required:
+        - id
+        - name
+        - price

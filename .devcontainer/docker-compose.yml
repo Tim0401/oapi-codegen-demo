@@ -1,0 +1,15 @@
+version: "3"
+services:
+  # サービス名
+  app:
+    # ./Dockerfileをビルドして使用
+    build: 
+      context: "."
+    # コンテナの起動を維持する
+    tty: true
+    # ホストポート9000番をコンテナポート9000番に割り当てる
+    ports:
+      - 9000:9000
+    # 一階層上のホストディレクトリをコンテナの/workspace/demo-remote-containerにマウントする
+    volumes:
+      - ../:/workspace/oapi-codegen-demo
