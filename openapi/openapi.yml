@@ -25,6 +25,13 @@ paths:
                   - items
       operationId: get-items
       description: アイテム一覧を取得します
+      parameters:
+        - schema:
+            type: integer
+            minimum: 0
+          in: query
+          name: $top
+          description: 取得数
     post:
       summary: ''
       operationId: post-items

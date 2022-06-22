@@ -15,7 +15,7 @@ import (
 type ServerInterface interface {
 	// Your GET endpoint
 	// (GET /items)
-	GetItems(ctx echo.Context) error
+	GetItems(ctx echo.Context, params GetItemsParams) error
 
 	// (POST /items)
 	PostItems(ctx echo.Context) error
@@ -39,8 +39,17 @@ type ServerInterfaceWrapper struct {
 func (w *ServerInterfaceWrapper) GetItems(ctx echo.Context) error {
 	var err error
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetItemsParams
+	// ------------- Optional query parameter "$top" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "$top", ctx.QueryParams(), &params.Top)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter $top: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetItems(ctx)
+	err = w.Handler.GetItems(ctx, params)
 	return err
 }
 

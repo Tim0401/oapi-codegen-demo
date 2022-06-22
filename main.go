@@ -8,6 +8,7 @@ import (
 
 	"github.com/Tim0401/oapi-codegen-demo/middleware"
 	"github.com/Tim0401/oapi-codegen-demo/openapi"
+	"github.com/Tim0401/oapi-codegen-demo/router"
 	oapiMw "github.com/deepmap/oapi-codegen/pkg/middleware"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"
@@ -22,6 +23,10 @@ const (
 	HeaderAuthorization      = "Authorization"
 	HeaderAuthorizationAdmin = "Authorization-Admin"
 )
+
+type Handler struct {
+	router.ItemRouterInterface
+}
 
 func main() {
 
@@ -87,7 +92,10 @@ func main() {
 	g.Use(mwRoot.Exec)
 
 	// 定義した struct を登録
-	// openapi.RegisterHandlers(g, handler)
+	handler := Handler{
+		ItemRouterInterface: &router.ItemRouter{},
+	}
+	openapi.RegisterHandlers(g, handler)
 
 	// 起動
 	port := "9000"

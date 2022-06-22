@@ -21,6 +21,12 @@ type Item struct {
 	Price int `json:"price"`
 }
 
+// GetItemsParams defines parameters for GetItems.
+type GetItemsParams struct {
+	// 取得数
+	Top *int `form:"$top,omitempty" json:"$top,omitempty"`
+}
+
 // PostItemsJSONBody defines parameters for PostItems.
 type PostItemsJSONBody = Item
 
