@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/Tim0401/oapi-codegen-demo/middleware"
 	"github.com/Tim0401/oapi-codegen-demo/openapi"
@@ -68,8 +71,10 @@ func main() {
 	// custom error message
 	validatorOpts.ErrorHandler = func(c echo.Context, err *echo.HTTPError) error {
 		if rerr, ok := err.Internal.(*openapi3filter.RequestError); ok {
-			fmt.Print(rerr.Parameter.Name)
-			err.Message = rerr.Parameter.Name + "が不正な値です。"
+			if rerr.Parameter != nil {
+				fmt.Print(rerr.Parameter.Name)
+				err.Message = rerr.Parameter.Name + "が不正な値です。"
+			}
 		}
 		return err
 	}
@@ -91,10 +96,13 @@ func main() {
 	userAuthRoute := mwRoot.Group(apiPathPrefix)
 	userAuthRoute.Use(authUser)
 	{
+		userAuthRoute.POST("/items")
 	}
 	adminAuthRoute := mwRoot.Group(apiPathPrefix)
 	adminAuthRoute.Use(authAdmin)
 	{
+		adminAuthRoute.PUT("/items/:id")
+		adminAuthRoute.DELETE("/items/:id")
 	}
 
 	// カスタムMiddlewareの適用
@@ -106,31 +114,46 @@ func main() {
 	}
 	openapi.RegisterHandlers(g, handler)
 
-	// 起動
+	// Start server
 	port := "9000"
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
+	go func() {
+		if err := e.Start(fmt.Sprintf(":%s", port)); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
+
+	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
+	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
 }
 
 func checkToken(s string) error {
-	fmt.Print("checkToken: do something")
+	fmt.Println("checkToken: do something")
 	return nil
 }
 
 func checkTokenAdmin(s string) error {
-	fmt.Print("checkTokenAdmin: do something")
+	fmt.Println("checkTokenAdmin: do something")
 	return nil
 }
 
 func authUser(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fmt.Print("authUser: do something")
+		fmt.Println("authUser: do something")
 		return next(c)
 	}
 }
 
 func authAdmin(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		fmt.Print("authAdmin: do something")
+		fmt.Println("authAdmin: do something")
 		return next(c)
 	}
 }

@@ -27,10 +27,12 @@ paths:
         - items
       description: アイテムを一件登録します
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/item'
+        description: ''
       responses:
         '201':
           description: Created
@@ -61,6 +63,7 @@ paths:
         '204':
           description: No Content
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -80,20 +83,23 @@ paths:
 components:
   schemas:
     item:
+      type: object
       title: item
       x-stoplight:
         id: ly7bu2x9amqta
-      type: object
       description: アイテム
       properties:
         id:
           type: string
+          minLength: 1
         name:
           type: string
           description: アイテム名
+          minLength: 1
         description:
           type: string
           description: アイテム説明
+          minLength: 1
         price:
           type: integer
           minimum: 0
@@ -136,3 +142,4 @@ components:
                   $ref: '#/components/schemas/item'
             required:
               - items
+  requestBodies: {}

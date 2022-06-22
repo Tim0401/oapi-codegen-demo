@@ -29,7 +29,7 @@ type ItemRouter struct{}
 
 func (r *ItemRouter) GetItems(ctx echo.Context, params openapi.GetItemsParams) error {
 	if params.Top != nil {
-		fmt.Printf("%v", *params.Top)
+		fmt.Printf("top: %v\n", *params.Top)
 	}
 	return ctx.JSON(http.StatusOK, openapi.GetItemsRes{
 		Items: []openapi.Item{
@@ -40,28 +40,29 @@ func (r *ItemRouter) GetItems(ctx echo.Context, params openapi.GetItemsParams) e
 func (r *ItemRouter) PostItems(ctx echo.Context) error {
 	body := openapi.PostItemsJSONRequestBody{}
 	if err := ctx.Bind(&body); err != nil {
-		fmt.Printf("%v", err)
+		fmt.Printf("%v\n", err)
 		return ctx.NoContent(http.StatusInternalServerError)
 	}
+	fmt.Printf("body: %+v\n", body)
 	return ctx.NoContent(http.StatusCreated)
 }
 func (r *ItemRouter) DeleteItem(ctx echo.Context, id int) error {
-	fmt.Printf("%v", id)
+	fmt.Printf("id: %v\n", id)
 	return ctx.NoContent(http.StatusNoContent)
 }
 func (r *ItemRouter) GetItem(ctx echo.Context, id int) error {
-	fmt.Printf("%v", id)
+	fmt.Printf("id: %v\n", id)
 	return ctx.JSON(http.StatusOK, openapi.GetItemRes{
 		Item: openapi.Item{},
 	})
 }
 func (r *ItemRouter) PutItem(ctx echo.Context, id int) error {
-	fmt.Printf("%v", id)
+	fmt.Printf("id: %v\n", id)
 	body := openapi.PutItemJSONRequestBody{}
 	if err := ctx.Bind(&body); err != nil {
-		fmt.Printf("%v", err)
+		fmt.Printf("%v\n", err)
 		return ctx.NoContent(http.StatusInternalServerError)
 	}
-	fmt.Printf("%v", body)
+	fmt.Printf("body: %+v\n", body)
 	return ctx.NoContent(http.StatusNoContent)
 }
