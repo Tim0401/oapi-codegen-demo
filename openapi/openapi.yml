@@ -39,6 +39,8 @@ paths:
       responses:
         '201':
           description: Created
+      security:
+        - Authorization: []
     parameters: []
   '/items/{id}':
     parameters:
@@ -49,7 +51,8 @@ paths:
         required: true
     get:
       summary: Your GET endpoint
-      tags: []
+      tags:
+        - items
       responses:
         '200':
           description: OK
@@ -65,6 +68,29 @@ paths:
         '404':
           description: Not Found
       operationId: get-item
+    put:
+      summary: ''
+      operationId: put-item
+      responses:
+        '204':
+          description: No Content
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/item'
+      security:
+        - Authorization-Admin: []
+      tags:
+        - items
+    delete:
+      summary: ''
+      operationId: delete-item
+      responses:
+        '204':
+          description: No Content
+      security:
+        - Authorization-Admin: []
 components:
   schemas:
     item:
@@ -90,3 +116,12 @@ components:
         - id
         - name
         - price
+  securitySchemes:
+    Authorization:
+      name: Authorization
+      type: apiKey
+      in: header
+    Authorization-Admin:
+      name: Authorization-Admin
+      type: apiKey
+      in: header

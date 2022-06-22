@@ -19,9 +19,15 @@ type ServerInterface interface {
 
 	// (POST /items)
 	PostItems(ctx echo.Context) error
+
+	// (DELETE /items/{id})
+	DeleteItem(ctx echo.Context, id string) error
 	// Your GET endpoint
 	// (GET /items/{id})
 	GetItem(ctx echo.Context, id string) error
+
+	// (PUT /items/{id})
+	PutItem(ctx echo.Context, id string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -42,8 +48,28 @@ func (w *ServerInterfaceWrapper) GetItems(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) PostItems(ctx echo.Context) error {
 	var err error
 
+	ctx.Set(AuthorizationScopes, []string{""})
+
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.PostItems(ctx)
+	return err
+}
+
+// DeleteItem converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteItem(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	ctx.Set(Authorization_AdminScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteItem(ctx, id)
 	return err
 }
 
@@ -60,6 +86,24 @@ func (w *ServerInterfaceWrapper) GetItem(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.GetItem(ctx, id)
+	return err
+}
+
+// PutItem converts echo context to params.
+func (w *ServerInterfaceWrapper) PutItem(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	ctx.Set(Authorization_AdminScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PutItem(ctx, id)
 	return err
 }
 
@@ -93,6 +137,8 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.GET(baseURL+"/items", wrapper.GetItems)
 	router.POST(baseURL+"/items", wrapper.PostItems)
+	router.DELETE(baseURL+"/items/:id", wrapper.DeleteItem)
 	router.GET(baseURL+"/items/:id", wrapper.GetItem)
+	router.PUT(baseURL+"/items/:id", wrapper.PutItem)
 
 }
