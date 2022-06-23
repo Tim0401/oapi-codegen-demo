@@ -80,6 +80,8 @@ paths:
           description: No Content
       security:
         - Authorization-Admin: []
+      tags:
+        - items
 components:
   schemas:
     item:

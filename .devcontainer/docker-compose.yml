@@ -10,6 +10,6 @@ services:
     # ホストポート9000番をコンテナポート9000番に割り当てる
     ports:
       - 9000:9000
-    # 一階層上のホストディレクトリをコンテナの/workspace/demo-remote-containerにマウントする
+    # 一階層上のホストディレクトリをコンテナの/workspace/oapi-codegen-demoにマウントする
     volumes:
       - ../:/workspace/oapi-codegen-demo
